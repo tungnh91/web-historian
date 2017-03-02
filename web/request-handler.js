@@ -13,6 +13,7 @@ exports.handleRequest = function (req, res) {
     });
   } else if (req.method === 'POST') {
     req.on('data', function (data) {
+<<<<<<< HEAD
       archive.isUrlInList(data);
       archive.addUrlToList(data);
       urlFromPost = data;
@@ -37,6 +38,19 @@ exports.handleRequest = function (req, res) {
     res.end(html)
     fs.setTimeout(5000);
 
+=======
+      if (!archive.isUrlInList(data) ) {
+        archive.addUrlToList(data);
+      } else {
+        archive.isUrlArchived();
+      }
+
+    });
+    res.writeHead(201, httpHelpers.headers);
+    res.end();
+  } else {
+    res.end();
+>>>>>>> 00033fa6095bc627004ebeaa9ddab3c4fc1c106b
   }
   // res.end(archive.paths.list);
 };

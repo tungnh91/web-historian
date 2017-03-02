@@ -28,9 +28,16 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
+  fs.readFile(exports.paths.list, 'utf8', function (err, data) {
+    if (err) {
+      throw err;
+    }
+    callback(data.split('\n'));
+  });
 };
 
 exports.isUrlInList = function(url, callback) {
+<<<<<<< HEAD
   var isUrlInList = false;
   var decodedUrl = exports.decoder(url);
   var path = exports.paths.list;
@@ -44,16 +51,27 @@ exports.isUrlInList = function(url, callback) {
     }
   });
   return isUrlInList;
+=======
+  exports.readListOfUrls(function (data) {
+    var decodedUrl = exports.decoder(url);
+    console.log('-------------', data, '------ decoded url', decodedUrl );
+    callback(_.contains(data, decodedUrl));
+  }); 
+>>>>>>> 00033fa6095bc627004ebeaa9ddab3c4fc1c106b
 };
 
 exports.addUrlToList = function(url, callback) {
   var decodedUrl = exports.decoder(url);
+<<<<<<< HEAD
   var path = exports.paths.list;
   fs.mkdir(path, _.identity)
+=======
+>>>>>>> 00033fa6095bc627004ebeaa9ddab3c4fc1c106b
   fs.appendFile(exports.paths.list, decodedUrl + '\n');
 };
 
 exports.isUrlArchived = function(url, callback) {
+
 };
 
 exports.downloadUrls = function(urls) {
