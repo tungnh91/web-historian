@@ -20,6 +20,7 @@
     "bluebird": "^3.3.4",
     "cron": "^1.1.0",
     "request": "^2.70.0",
+    "string_decoder": "^0.10.31",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

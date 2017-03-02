@@ -1,6 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var StringDecoder = require('string_decoder').StringDecoder;
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -32,6 +33,10 @@ exports.isUrlInList = function(url, callback) {
 };
 
 exports.addUrlToList = function(url, callback) {
+  console.log(__dirname + '/archives/sites/sites.txt');
+  var decoder = new StringDecoder('utf8');
+  var decodedUrl = decoder.write(url).split('=')[1] + '\n';
+  fs.appendFile('../archives/sites.txt', decodedUrl);
 };
 
 exports.isUrlArchived = function(url, callback) {
@@ -39,3 +44,4 @@ exports.isUrlArchived = function(url, callback) {
 
 exports.downloadUrls = function(urls) {
 };
+

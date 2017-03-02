@@ -16,13 +16,12 @@ exports.serveAssets = function(res, asset, callback, req) {
   // (Static files are things like html (yours or archived from others...),
   // css, or anything that doesn't change often.)
   // console.log(res);
-  if (req.url === '/') {
-    console.log('hi');
-    fs.readFile(__dirname + '/public/index.html', 'utf8', function (err, html) {
-      res.writeHead(200, {'Content-Type': 'text/html'});
-      res.end(html);
-    });
-  }
+  // if (req.url === '/') {
+  //   fs.readFile(__dirname + '/public/index.html', 'utf8', function (err, html) {
+  //     res.writeHead(200, {'Content-Type': 'text/html'});
+  //     res.end(html);
+  //   });
+  // }
 };
 
 
