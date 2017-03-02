@@ -28,30 +28,29 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(callback) {
+  fs.readFile(exports.paths.list, 'utf8', function (err, data) {
+    if (err) {
+      throw err;
+    }
+    callback(data.split('\n'));
+  });
 };
 
 exports.isUrlInList = function(url, callback) {
-  var isUrlInList = false;
-  var decodedUrl = exports.decoder(url);
-  var file = lineReader.createInterface({
-    input: fs.createReadStream('/Users/student/Desktop/hrsf72-web-historian/web/archives/sites.txt')
-  });
-  file.on('line', function(line) {
-    if (line === decodedUrl) {
-      isUrlInList = true;
-      console.log('a');
-    }
-  });
-  console.log('b');
-  return isUrlInList;
+  exports.readListOfUrls(function (data) {
+    var decodedUrl = exports.decoder(url);
+    console.log('-------------', data, '------ decoded url', decodedUrl );
+    callback(_.contains(data, decodedUrl));
+  }); 
 };
 
 exports.addUrlToList = function(url, callback) {
   var decodedUrl = exports.decoder(url);
-  fs.appendFile('/Users/student/Desktop/hrsf72-web-historian/web/archives/sites.txt', decodedUrl + '\n');
+  fs.appendFile(exports.paths.list, decodedUrl + '\n');
 };
 
 exports.isUrlArchived = function(url, callback) {
+
 };
 
 exports.downloadUrls = function(urls) {

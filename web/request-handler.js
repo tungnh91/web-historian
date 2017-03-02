@@ -13,16 +13,17 @@ exports.handleRequest = function (req, res) {
     });
   } else if (req.method === 'POST') {
     req.on('data', function (data) {
-      archive.isUrlInList(data);
-      archive.addUrlToList(data);
-      urlFromPost = data;
+      if (!archive.isUrlInList(data) ) {
+        archive.addUrlToList(data);
+      } else {
+        archive.isUrlArchived();
+      }
+
     });
     res.writeHead(201, httpHelpers.headers);
-    // scan sites archive
-    // render loading.html if it wasn't found
-    res.end(html);
+    res.end();
   } else {
-    res.end(html);
+    res.end();
   }
   // res.end(archive.paths.list);
 };
