@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
 var StringDecoder = require('string_decoder').StringDecoder;
+var lineReader = require('readline');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -30,18 +31,35 @@ exports.readListOfUrls = function(callback) {
 };
 
 exports.isUrlInList = function(url, callback) {
+  var isUrlInList = false;
+  var decodedUrl = exports.decoder(url);
+  var file = lineReader.createInterface({
+    input: fs.createReadStream('/Users/student/Desktop/hrsf72-web-historian/web/archives/sites.txt')
+  });
+  file.on('line', function(line) {
+    if (line === decodedUrl) {
+      isUrlInList = true;
+      console.log('a');
+    }
+  });
+  console.log('b');
+  return isUrlInList;
 };
 
 exports.addUrlToList = function(url, callback) {
-  console.log(__dirname + '/archives/sites/sites.txt');
-  var decoder = new StringDecoder('utf8');
-  var decodedUrl = decoder.write(url).split('=')[1] + '\n';
-  fs.appendFile('../archives/sites.txt', decodedUrl);
+  var decodedUrl = exports.decoder(url);
+  fs.appendFile('/Users/student/Desktop/hrsf72-web-historian/web/archives/sites.txt', decodedUrl + '\n');
 };
 
 exports.isUrlArchived = function(url, callback) {
 };
 
 exports.downloadUrls = function(urls) {
+};
+
+exports.decoder = function(url) {
+  var decoder = new StringDecoder('utf8');
+  var decodedUrl = decoder.write(url).split('=')[1];
+  return decodedUrl;
 };
 
