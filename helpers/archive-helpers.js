@@ -33,22 +33,24 @@ exports.readListOfUrls = function(callback) {
 exports.isUrlInList = function(url, callback) {
   var isUrlInList = false;
   var decodedUrl = exports.decoder(url);
+  var path = exports.paths.list;
+  fs.mkdir(exports.paths.list, _.identity)
   var file = lineReader.createInterface({
-    input: fs.createReadStream('/Users/student/Desktop/hrsf72-web-historian/web/archives/sites.txt')
+    input: fs.createReadStream(path)
   });
   file.on('line', function(line) {
     if (line === decodedUrl) {
       isUrlInList = true;
-      console.log('a');
     }
   });
-  console.log('b');
   return isUrlInList;
 };
 
 exports.addUrlToList = function(url, callback) {
   var decodedUrl = exports.decoder(url);
-  fs.appendFile('/Users/student/Desktop/hrsf72-web-historian/web/archives/sites.txt', decodedUrl + '\n');
+  var path = exports.paths.list;
+  fs.mkdir(path, _.identity)
+  fs.appendFile(exports.paths.list, decodedUrl + '\n');
 };
 
 exports.isUrlArchived = function(url, callback) {
