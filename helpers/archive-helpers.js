@@ -60,6 +60,6 @@ exports.downloadUrls = (urls) => {
   // Iterate over urls and pipe to new files
   _.each(urls, (url) => {
     if (!url) { return; }
-    request(`http:// + ${url}`).pipe(fs.createWriteStream(`${exports.paths.archivedSites} + / + ${url}`));
+      request('http://' + url).pipe(fs.createWriteStream(exports.paths.archivedSites + '/' + url));
   });
 };
