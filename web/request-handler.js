@@ -1,56 +1,63 @@
-var path = require('path');
-var archive = require('../helpers/archive-helpers');
-var httpHelpers = require('../web/http-helpers');
-var fs = require('fs');
-
+const archive = require('../helpers/archive-helpers');
 // require more modules/folders here!
+/* START SOLUTION */
+const url = require('url');
+const helpers = require('./http-helpers');
+
+const actions = {
+  GET: (request, response) => {
+    let urlPath = url.parse(request.url).pathname;
+
+    // / means index.html
+    if (urlPath === '/') { urlPath = '/index.html'; }
+
+    helpers.serveAssets(response, urlPath, () => {
+      // trim leading slash if present
+      if (urlPath[0] === '/') { urlPath = urlPath.slice(1); }
+
+      archive.isUrlInList(urlPath, (found) => {
+        if (found) {
+          helpers.sendRedirect(response, '/loading.html');
+        } else {
+          helpers.send404(response);
+        }
+      });
+    });
+  },
+  POST: (request, response) => {
+    helpers.collectData(request, (data) => {
+      let url = data.split('=')[1].replace('http://', '');
+      // check sites.txt for web site
+      archive.isUrlInList(url, (found) => {
+        if (found) { // found site
+          // check if site is on disk
+          archive.isUrlArchived(url, (exists) =>{
+            if (exists) {
+              // redirect to site page (/www.google.com)
+              url = `/ + ${url}`;
+              helpers.sendRedirect(response, url);
+            } else {
+              // Redirect to loading.html
+              helpers.sendRedirect(response, '/loading.html');
+            }
+          });
+        } else { // not found
+          // add to sites.txt
+          archive.addUrlToList(url, () => {
+            // Redirect to loading.html
+            helpers.sendRedirect(response, '/loading.html');
+          });
+        }
+      });
+    });
+  }
+};
 
 exports.handleRequest = function (req, res) {
-  if (req.method === 'GET' && req.url === '/') {
-      fs.readFile(__dirname + '/public/index.html', 'utf8', function (err, html) {
-      res.writeHead(200, httpHelpers.headers);
-      res.end(html);
-    });
-  } else if (req.method === 'POST') {
-    req.on('data', function (data) {
-<<<<<<< HEAD
-      archive.isUrlInList(data);
-      archive.addUrlToList(data);
-      urlFromPost = data;
-    fs.setTimeout(5000);
-
-
-    });
-    res.writeHead(201, httpHelpers.headers);
-    // scan sites archive
-    // render loading.html if it wasn't found
-    res.end()
-
+  var handler = actions[req.method];
+  if (handler) {
+    handler(req, res);
   } else {
-    fs.readFile(__dirname + '/public/index.html', 'utf8', function (err, html) {
-      console.log('this is the html', html)
-      if (err) {
-        throw err;
-      }
-      res.writeHead(200, httpHelpers.headers);
-      res.end(html);
-    })
-    res.end(html)
-    fs.setTimeout(5000);
-
-=======
-      if (!archive.isUrlInList(data) ) {
-        archive.addUrlToList(data);
-      } else {
-        archive.isUrlArchived();
-      }
-
-    });
-    res.writeHead(201, httpHelpers.headers);
-    res.end();
-  } else {
-    res.end();
->>>>>>> 00033fa6095bc627004ebeaa9ddab3c4fc1c106b
+    helpers.send404(res);
   }
-  // res.end(archive.paths.list);
 };
