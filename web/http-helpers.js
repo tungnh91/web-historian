@@ -28,5 +28,26 @@ exports.serveAssets = (res, asset, callback) => {
   });
 };
 
+exports.sendRedirect = (response, location, status = 302) => {
+  response.writeHead(status, {Location: location});
+  response.end();
+};
 
+exports.sendResponse = (response, obj, status = 200) => {
+  response.writeHead(status, exports.headers);
+  response.end(obj);
+};
 
+exports.collectData = (request, callback) => {
+  let data = '';
+  request.on('data', (chunk) =>{
+    data += chunk;
+  });
+  request.on('end', () => {
+    callback(data);
+  });
+};
+
+exports.send404 = (response) => {
+  exports.sendResponse(response, '404: Page not found', 404);
+};
