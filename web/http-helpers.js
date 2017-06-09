@@ -1,7 +1,5 @@
-var http = require('http');
-var path = require('path');
-var fs = require('fs');
-var archive = require('../helpers/archive-helpers');
+const fs = require('fs');
+const archive = require('../helpers/archive-helpers');
 
 exports.headers = {
   'access-control-allow-origin': '*',
@@ -11,13 +9,24 @@ exports.headers = {
   'Content-Type': 'text/html'
 };
 
-exports.serveAssets = function(res, asset, callback, req) {
-  // Write some code here that helps serve up your static files!
-  // (Static files are things like html (yours or archived from others...),
-  // css, or anything that doesn't change often.)
-  // console.log(res);
+exports.serveAssets = (res, asset, callback) => {
+  const encoding = {encoding: 'utf8'};
+  fs.readFile(archive.paths.siteAssets + asset, encoding,(err, data) => {
+    if (err) {
+      // file doesn't exist in public!
+      fs.readFile(archive.paths.archivedSites + asset, encoding, (err, data) => {
+        if (err) {
+          // file doesn't exist in archive!
+          callback ? callback() : exports.send404(res);
+        } else {
+          exports.sendResponse(res, data);
+        }
+      });
+    } else {
+      exports.sendResponse(res, data);
+    }
+  });
 };
 
 
 
-// As you progress, keep thinking about what helper functions you can put here!
