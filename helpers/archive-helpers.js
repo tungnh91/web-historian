@@ -1,7 +1,7 @@
-var fs = require('fs');
-var path = require('path');
-var request = require('request');
-var _ = require('underscore');
+const fs = require('fs');
+const path = require('path');
+const request = require('request');
+const _ = require('underscore');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -17,15 +17,15 @@ exports.paths = {
 };
 
 // Used for stubbing paths for tests, do not modify
-exports.initialize = function(pathsObj) {
-  _.each(pathsObj, function(path, type) {
+exports.initialize = (pathsObj) => {
+  _.each(pathsObj, (path, type)  => {
     exports.paths[type] = path;
   });
 };
 /* START SOLUTION */
 
-exports.readListOfUrls = function(callback) {
-  fs.readFile(exports.paths.list, function(err, sites) {
+exports.readListOfUrls = (callback) => {
+  fs.readFile(exports.paths.list, (err, sites) => {
     sites = sites.toString().split('\n');
     if (callback) {
       callback(sites);
@@ -33,33 +33,33 @@ exports.readListOfUrls = function(callback) {
   });
 };
 
-exports.isUrlInList = function(url, callback) {
-  exports.readListOfUrls(function(sites) {
-    var found = _.any(sites, function(site, i) {
+exports.isUrlInList = (url, callback) => {
+  exports.readListOfUrls((sites) => {
+    const found = _.any(sites, (site, i) => {
       return site.match(url);
     });
     callback(found);
   });
 };
 
-exports.addUrlToList = function(url, callback) {
-  fs.appendFile(exports.paths.list, url + '\n', function(err, file) {
+exports.addUrlToList = (url, callback) => {
+  fs.appendFile(exports.paths.list, url + '\n', (err, file) => {
     callback();
   });
 };
 
-exports.isUrlArchived = function(url, callback) {
-  var sitePath = path.join(exports.paths.archivedSites, url);
+exports.isUrlArchived = (url, callback) => {
+  const sitePath = path.join(exports.paths.archivedSites, url);
 
-  fs.exists(sitePath, function(exists) {
+  fs.exists(sitePath, (exists) => {
     callback(exists);
   });
 };
 
-exports.downloadUrls = function(urls) {
+exports.downloadUrls = (urls) => {
   // Iterate over urls and pipe to new files
-  _.each(urls, function (url) {
+  _.each(urls, (url) => {
     if (!url) { return; }
-    request('http://' + url).pipe(fs.createWriteStream(exports.paths.archivedSites + '/' + url));
+    request(`http:// + ${url}`).pipe(fs.createWriteStream(`${exports.paths.archivedSites} + / + ${url}`));
   });
 };
