@@ -22,7 +22,7 @@ exports.initialize = (pathsObj) => {
     exports.paths[type] = path;
   });
 };
-/* START SOLUTION */
+
 
 exports.readListOfUrls = (callback) => {
   fs.readFile(exports.paths.list, (err, sites) => {
